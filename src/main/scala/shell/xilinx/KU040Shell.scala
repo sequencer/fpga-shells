@@ -57,8 +57,8 @@ abstract class KU040Shell(implicit val p: Parameters) extends RawModule {
   // UART
   val uart_tx              = IO(Output(Bool()))
   val uart_rx              = IO(Input(Bool()))
-  val uart_rtsn            = IO(Output(Bool()))
-  val uart_ctsn            = IO(Input(Bool()))
+  //val uart_rtsn            = IO(Output(Bool()))
+  //val uart_ctsn            = IO(Input(Bool()))
 
   // SDIO
   val sdio_clk             = IO(Output(Bool()))
@@ -224,7 +224,7 @@ abstract class KU040Shell(implicit val p: Parameters) extends RawModule {
   // UART
   //-----------------------------------------------------------------------
 
-  uart_rtsn := false.B
+  //uart_rtsn := false.B
 
   def connectUART(dut: HasPeripheryUARTModuleImp): Unit = {
     val uartParams = p(PeripheryUARTKey)
