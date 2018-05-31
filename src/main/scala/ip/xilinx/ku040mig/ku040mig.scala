@@ -11,7 +11,7 @@ import freechips.rocketchip.config._
 // Black Box
 
 class KU040MIGIODDR(depth : BigInt) extends GenericParameterizedBundle(depth) {
-  require((depth<=0x80000000L),"KU040MIGIODDR supports upto 2GB depth configuraton")
+  require((depth<=0x40000000L),"KU040MIGIODDR supports upto 1GB depth configuraton")
   val c0_ddr4_adr           = Bits(OUTPUT,17)
   val c0_ddr4_bg            = Bits(OUTPUT,1)
   val c0_ddr4_ba            = Bits(OUTPUT,2)
@@ -23,10 +23,10 @@ class KU040MIGIODDR(depth : BigInt) extends GenericParameterizedBundle(depth) {
   val c0_ddr4_cs_n          = Bits(OUTPUT,1)
   val c0_ddr4_odt           = Bits(OUTPUT,1)
 
-  val c0_ddr4_dq            = Analog(64.W)
-  val c0_ddr4_dqs_c         = Analog(8.W)
-  val c0_ddr4_dqs_t         = Analog(8.W)
-  val c0_ddr4_dm_dbi_n      = Analog(8.W)
+  val c0_ddr4_dq            = Analog(32.W)
+  val c0_ddr4_dqs_c         = Analog(4.W)
+  val c0_ddr4_dqs_t         = Analog(4.W)
+  val c0_ddr4_dm_dbi_n      = Analog(4.W)
 }
 
 //reused directly in io bundle for sifive.blocks.devices.xilinxku040mig
@@ -47,12 +47,12 @@ trait KU040MIGIOClocksReset extends Bundle {
 //turn off linter: blackbox name must match verilog module
 class ku040mig(depth : BigInt)(implicit val p:Parameters) extends BlackBox
 {
-  require((depth<=0x80000000L),"ku040mig supports upto 2GB depth configuraton")
+  require((depth<=0x40000000L),"ku040mig supports upto 1GB depth configuraton")
 
   val io = new KU040MIGIODDR(depth) with KU040MIGIOClocksReset {
     //slave interface write address ports
     val c0_ddr4_s_axi_awid            = Bits(INPUT,4)
-    val c0_ddr4_s_axi_awaddr          = Bits(INPUT,31)
+    val c0_ddr4_s_axi_awaddr          = Bits(INPUT,64)
     val c0_ddr4_s_axi_awlen           = Bits(INPUT,8)
     val c0_ddr4_s_axi_awsize          = Bits(INPUT,3)
     val c0_ddr4_s_axi_awburst         = Bits(INPUT,2)
@@ -88,7 +88,7 @@ class ku040mig(depth : BigInt)(implicit val p:Parameters) extends BlackBox
     //slave interface read data ports
     val c0_ddr4_s_axi_rready          = Bool(INPUT)
     val c0_ddr4_s_axi_rid             = Bits(OUTPUT,4)
-    val c0_ddr4_s_axi_rdata           = Bits(OUTPUT,64)
+    val c0_ddr4_s_axi_rdata           = Bits(OUTPUT,32)
     val c0_ddr4_s_axi_rresp           = Bits(OUTPUT,2)
     val c0_ddr4_s_axi_rlast           = Bool(OUTPUT)
     val c0_ddr4_s_axi_rvalid          = Bool(OUTPUT)
