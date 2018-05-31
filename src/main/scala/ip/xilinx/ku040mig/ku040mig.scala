@@ -97,7 +97,7 @@ class ku040mig(depth : BigInt)(implicit val p:Parameters) extends BlackBox
   ElaborationArtefacts.add(
     "ku040mig.vivado.tcl",
     """
-      create_ip -vendor xilinx.com -library ip -version 2.2 -name ddr4 -module_name ku040mig -dir $ipdir -force
+      create_ip -vendor xilinx.com -library ip -name ddr4 -module_name ku040mig -dir $ipdir -force
       set_property -dict [list \
       CONFIG.AL_SEL                               {0} \
       CONFIG.C0.ADDR_WIDTH                        {17} \
