@@ -59,7 +59,7 @@ set_property PACKAGE_PIN N23 [get_ports "ddr_c0_ddr4_dm_dbi_n[2]"]
 set_property PACKAGE_PIN E25 [get_ports "ddr_c0_ddr4_dm_dbi_n[3]"]
 
 set_property PACKAGE_PIN V26 [get_ports "ddr_c0_ddr4_ba[0]"]
-set_property PACKAGE_PIN U25 [get_ports "ddr_c0_ddr4_ba[1]"]
+set_property PACKAGE_PIN U24 [get_ports "ddr_c0_ddr4_ba[1]"]
 
 set_property PACKAGE_PIN T22 [get_ports "ddr_c0_ddr4_dq[0]"]
 set_property PACKAGE_PIN U22 [get_ports "ddr_c0_ddr4_dq[1]"]
