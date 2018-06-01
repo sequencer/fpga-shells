@@ -99,131 +99,79 @@ class ku040mig(depth : BigInt)(implicit val p:Parameters) extends BlackBox
     """
       create_ip -vendor xilinx.com -library ip -name ddr4 -module_name ku040mig -dir $ipdir -force
       set_property -dict [list \
-      CONFIG.ADDN_UI_CLKOUT1_FREQ_HZ {100} \
-      CONFIG.ADDN_UI_CLKOUT2_FREQ_HZ {None} \
-      CONFIG.ADDN_UI_CLKOUT3_FREQ_HZ {None} \
-      CONFIG.ADDN_UI_CLKOUT4_FREQ_HZ {None} \
-      CONFIG.AL_SEL {0} \
-      CONFIG.C0.ADDR_WIDTH {17} \
-      CONFIG.C0.BANK_GROUP_WIDTH {1} \
-      CONFIG.C0.CKE_WIDTH {1} \
-      CONFIG.C0.CK_WIDTH {1} \
-      CONFIG.C0.CS_WIDTH {1} \
-      CONFIG.C0.ControllerType {DDR4_SDRAM} \
-      CONFIG.C0.DDR4_ACT_SKEW {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_0 {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_1 {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_2 {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_3 {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_4 {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_5 {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_6 {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_7 {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_8 {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_9 {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_10 {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_11 {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_12 {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_13 {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_14 {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_15 {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_16 {0} \
-      CONFIG.C0.DDR4_ADDR_SKEW_17 {0} \
-      CONFIG.C0.DDR4_AUTO_AP_COL_A3 {false} \
-      CONFIG.C0.DDR4_AutoPrecharge {false} \
-      CONFIG.C0.DDR4_AxiAddressWidth {30} \
-      CONFIG.C0.DDR4_AxiArbitrationScheme {RD_PRI_REG} \
-      CONFIG.C0.DDR4_AxiDataWidth {256} \
-      CONFIG.C0.DDR4_AxiIDWidth {4} \
-      CONFIG.C0.DDR4_AxiNarrowBurst {false} \
-      CONFIG.C0.DDR4_AxiSelection {true} \
-      CONFIG.C0.DDR4_BA_SKEW_0 {0} \
-      CONFIG.C0.DDR4_BA_SKEW_1 {0} \
-      CONFIG.C0.DDR4_BG_SKEW_0 {0} \
-      CONFIG.C0.DDR4_BG_SKEW_1 {0} \
-      CONFIG.C0.DDR4_BurstLength {8} \
-      CONFIG.C0.DDR4_BurstType {Sequential} \
-      CONFIG.C0.DDR4_CKE_SKEW_0 {0} \
-      CONFIG.C0.DDR4_CKE_SKEW_1 {0} \
-      CONFIG.C0.DDR4_CKE_SKEW_2 {0} \
-      CONFIG.C0.DDR4_CKE_SKEW_3 {0} \
-      CONFIG.C0.DDR4_CK_SKEW_0 {0} \
-      CONFIG.C0.DDR4_CK_SKEW_1 {0} \
-      CONFIG.C0.DDR4_CK_SKEW_2 {0} \
-      CONFIG.C0.DDR4_CK_SKEW_3 {0} \
-      CONFIG.C0.DDR4_CLKFBOUT_MULT {4} \
-      CONFIG.C0.DDR4_CLKOUT0_DIVIDE {5} \
-      CONFIG.C0.DDR4_CS_SKEW_0 {0} \
-      CONFIG.C0.DDR4_CS_SKEW_1 {0} \
-      CONFIG.C0.DDR4_CS_SKEW_2 {0} \
-      CONFIG.C0.DDR4_CS_SKEW_3 {0} \
-      CONFIG.C0.DDR4_Capacity {512} \
-      CONFIG.C0.DDR4_CasLatency {11} \
-      CONFIG.C0.DDR4_CasWriteLatency {11} \
-      CONFIG.C0.DDR4_ChipSelect {true} \
-      CONFIG.C0.DDR4_Clamshell {false} \
-      CONFIG.C0.DDR4_CustomParts {no_file_loaded} \
-      CONFIG.C0.DDR4_DIVCLK_DIVIDE {1} \
-      CONFIG.C0.DDR4_DataMask {DM_NO_DBI} \
-      CONFIG.C0.DDR4_DataWidth {32} \
-      CONFIG.C0.DDR4_Ecc {false} \
-      CONFIG.C0.DDR4_InputClockPeriod {4000} \
-      CONFIG.C0.DDR4_LR_SKEW_0 {0} \
-      CONFIG.C0.DDR4_LR_SKEW_1 {0} \
-      CONFIG.C0.DDR4_MCS_ECC {false} \
-      CONFIG.C0.DDR4_Mem_Add_Map {ROW_BANK_COLUMN} \
-      CONFIG.C0.DDR4_MemoryName {MainMemory} \
-      CONFIG.C0.DDR4_MemoryPart {EDY4016AABG} \-DR-F
-      CONFIG.C0.DDR4_MemoryType {Components} \
-      CONFIG.C0.DDR4_MemoryVoltage {1} \.2V
-      CONFIG.C0.DDR4_ODT_SKEW_0 {0} \
-      CONFIG.C0.DDR4_ODT_SKEW_1 {0} \
-      CONFIG.C0.DDR4_ODT_SKEW_2 {0} \
-      CONFIG.C0.DDR4_ODT_SKEW_3 {0} \
-      CONFIG.C0.DDR4_OnDieTermination {RZQ} \/6
-      CONFIG.C0.DDR4_Ordering {Normal} \
-      CONFIG.C0.DDR4_OutputDriverImpedenceControl {RZQ} \/7
-      CONFIG.C0.DDR4_PAR_SKEW {0} \
-      CONFIG.C0.DDR4_PhyClockRatio {4} \:1
-      CONFIG.C0.DDR4_SAVE_RESTORE {false} \
-      CONFIG.C0.DDR4_SELF_REFRESH {false} \
-      CONFIG.C0.DDR4_Slot {Single} \
-      CONFIG.C0.DDR4_Specify_MandD {false} \
-      CONFIG.C0.DDR4_TimePeriod {1250} \
-      CONFIG.C0.DDR4_UserRefresh_ZQCS {false} \
-      CONFIG.C0.DDR4_isCKEShared {false} \
-      CONFIG.C0.DDR4_isCustom {false} \
-      CONFIG.C0.LR_WIDTH {1} \
-      CONFIG.C0.MIGRATION {false} \
-      CONFIG.C0.ODT_WIDTH {1} \
-      CONFIG.C0.StackHeight {1} \
-      CONFIG.C0_CLOCK_BOARD_INTERFACE {default_sysclk_250} \
-      CONFIG.C0_DDR4_BOARD_INTERFACE {ddr4_sdram} \
-      CONFIG.CLKOUT6 {false} \
-      CONFIG.Component_Name {design_1_ddr4_0_0} \
-      CONFIG.DCI_Cascade {false} \
-      CONFIG.DIFF_TERM_SYSCLK {false} \
-      CONFIG.Debug_Signal {Disable} \
-      CONFIG.Default_Bank_Selections {false} \
-      CONFIG.Enable_SysPorts {true} \
-      CONFIG.Example_TG {SIMPLE_TG} \
-      CONFIG.IOPowerReduction {OFF} \
-      CONFIG.IO_Power_Reduction {false} \
-      CONFIG.IS_FROM_PHY {1} \
-      CONFIG.MCS_DBG_EN {false} \
-      CONFIG.No_Controller {1} \
-      CONFIG.PARTIAL_RECONFIG_FLOW_MIG {false} \
-      CONFIG.PING_PONG_PHY {1} \
-      CONFIG.Phy_Only {Complete_Memory_Controller} \
-      CONFIG.RECONFIG_XSDB_SAVE_RESTORE {false} \
-      CONFIG.RESET_BOARD_INTERFACE {reset} \
-      CONFIG.Reference_Clock {Differential} \
-      CONFIG.SET_DW_TO_40 {false} \
-      CONFIG.Simulation_Mode {BFM} \
-      CONFIG.System_Clock {Differential} \
-      CONFIG.TIMING_3DS {false} \
-      CONFIG.TIMING_OP1 {false} \
-      CONFIG.TIMING_OP2 {false} 
+      CONFIG.AL_SEL {0}
+      CONFIG.C0.ADDR_WIDTH {17}
+      CONFIG.C0.BANK_GROUP_WIDTH {1}
+      CONFIG.C0.CKE_WIDTH {1}
+      CONFIG.C0.CK_WIDTH {1}
+      CONFIG.C0.CS_WIDTH {1}
+      CONFIG.C0.ControllerType {DDR4_SDRAM}
+      CONFIG.C0.DDR4_AUTO_AP_COL_A3 {false}
+      CONFIG.C0.DDR4_AutoPrecharge {false}
+      CONFIG.C0.DDR4_AxiAddressWidth {30}
+      CONFIG.C0.DDR4_AxiArbitrationScheme {RD_PRI_REG}
+      CONFIG.C0.DDR4_AxiDataWidth {256}
+      CONFIG.C0.DDR4_AxiIDWidth {4}
+      CONFIG.C0.DDR4_AxiNarrowBurst {false}
+      CONFIG.C0.DDR4_AxiSelection {true}
+      CONFIG.C0.DDR4_BurstLength {8}
+      CONFIG.C0.DDR4_BurstType {Sequential}
+      CONFIG.C0.DDR4_CLKFBOUT_MULT {4}
+      CONFIG.C0.DDR4_CLKOUT0_DIVIDE {5}
+      CONFIG.C0.DDR4_Capacity {512}
+      CONFIG.C0.DDR4_CasLatency {11}
+      CONFIG.C0.DDR4_CasWriteLatency {11}
+      CONFIG.C0.DDR4_ChipSelect {true}
+      CONFIG.C0.DDR4_Clamshell {false}
+      CONFIG.C0.DDR4_CustomParts {no_file_loaded}
+      CONFIG.C0.DDR4_DIVCLK_DIVIDE {1}
+      CONFIG.C0.DDR4_DataMask {DM_NO_DBI}
+      CONFIG.C0.DDR4_DataWidth {32}
+      CONFIG.C0.DDR4_Ecc {false}
+      CONFIG.C0.DDR4_MCS_ECC {false}
+      CONFIG.C0.DDR4_Mem_Add_Map {ROW_BANK_COLUMN}
+      CONFIG.C0.DDR4_MemoryName {MainMemory}
+      CONFIG.C0.DDR4_MemoryPart {EDY4016AABG-DR-F}
+      CONFIG.C0.DDR4_MemoryType {Components}
+      CONFIG.C0.DDR4_MemoryVoltage {1.2V}
+      CONFIG.C0.DDR4_OnDieTermination {RZQ/6}
+      CONFIG.C0.DDR4_Ordering {Normal}
+      CONFIG.C0.DDR4_OutputDriverImpedenceControl {RZQ/7}
+      CONFIG.C0.DDR4_PhyClockRatio {4:1}
+      CONFIG.C0.DDR4_SAVE_RESTORE {false}
+      CONFIG.C0.DDR4_SELF_REFRESH {false}
+      CONFIG.C0.DDR4_Slot {Single}
+      CONFIG.C0.DDR4_Specify_MandD {false}
+      CONFIG.C0.DDR4_TimePeriod {1250}
+      CONFIG.C0.DDR4_UserRefresh_ZQCS {false}
+      CONFIG.C0.DDR4_isCKEShared {false}
+      CONFIG.C0.DDR4_isCustom {false}
+      CONFIG.C0.LR_WIDTH {1}
+      CONFIG.C0.ODT_WIDTH {1}
+      CONFIG.C0.StackHeight {1}
+      CONFIG.C0_CLOCK_BOARD_INTERFACE {default_sysclk_250}
+      CONFIG.C0_DDR4_BOARD_INTERFACE {ddr4_sdram}
+      CONFIG.DCI_Cascade {false}
+      CONFIG.DIFF_TERM_SYSCLK {false}
+      CONFIG.Debug_Signal {Disable}
+      CONFIG.Default_Bank_Selections {false}
+      CONFIG.Enable_SysPorts {true}
+      CONFIG.IOPowerReduction {OFF}
+      CONFIG.IO_Power_Reduction {false}
+      CONFIG.IS_FROM_PHY {1}
+      CONFIG.MCS_DBG_EN {false}
+      CONFIG.No_Controller {1}
+      CONFIG.PARTIAL_RECONFIG_FLOW_MIG {false}
+      CONFIG.PING_PONG_PHY {1}
+      CONFIG.Phy_Only {Complete_Memory_Controller}
+      CONFIG.RECONFIG_XSDB_SAVE_RESTORE {false}
+      CONFIG.RESET_BOARD_INTERFACE {reset}
+      CONFIG.Reference_Clock {Differential}
+      CONFIG.SET_DW_TO_40 {false}
+      CONFIG.System_Clock {Differential}
+      CONFIG.TIMING_3DS {false}
+      CONFIG.TIMING_OP1 {false}
+      CONFIG.TIMING_OP2 {false}
       ] [get_ips ku040mig]"""
   )
 
