@@ -1,12 +1,12 @@
 ## mcs generation
 set_property BITSTREAM.CONFIG.EXTMASTERCCLK_EN div-1 [current_design]
 set_property BITSTREAM.CONFIG.SPI_FALL_EDGE YES [current_design]
-set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 8 [current_design]
+set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4 [current_design]
 set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
 set_property BITSTREAM.CONFIG.UNUSEDPIN Pulldown [current_design]
 set_property CFGBVS GND [current_design]
 set_property CONFIG_VOLTAGE 1.8 [current_design]
-set_property CONFIG_MODE SPIx8 [current_design]
+set_property CONFIG_MODE SPIx4 [current_design]
 
 ## clock and reset
 set_property PACKAGE_PIN H22 [get_ports sys_diff_clock_clk_p]
@@ -111,8 +111,6 @@ set_property IOSTANDARD LVCMOS18 [get_ports uart_tx]
 set_property IOB TRUE [get_ports uart_tx]
 
 # platform only
-set_property IOB TRUE [get_cells "U500KU040System/uarts_0/txm/out_reg"]
-set_property IOB TRUE [get_cells "uart_rxd_sync/sync_1"]
 
 # JTAG use pmod1
 set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets jtag_TCK_IBUF]
