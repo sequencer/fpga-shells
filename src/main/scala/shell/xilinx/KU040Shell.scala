@@ -7,7 +7,8 @@ import chisel3.experimental.{Analog, RawModule}
 import freechips.rocketchip.config._
 import freechips.rocketchip.devices.debug._
 import freechips.rocketchip.util.SyncResetSynchronizerShiftReg
-import sifive.blocks.devices.spi.{HasPeripherySPIFlashModuleImp, PeripherySPIFlashKey}
+import sifive.blocks.devices.pinctrl.BasePin
+import sifive.blocks.devices.spi.{HasPeripherySPIFlashModuleImp, PeripherySPIFlashKey, SPIPins, SPIPinsFromPort}
 import sifive.blocks.devices.uart._
 import sifive.fpgashells.devices.xilinx.xilinxku040mig._
 import sifive.fpgashells.ip.xilinx._
@@ -201,16 +202,24 @@ abstract class KU040Shell(implicit val p: Parameters) extends RawModule {
   // SPI
   //-----------------------------------------------------------------------
 
-  def connectSPI(dut: HasPeripherySPIFlashModuleImp): Unit = {
-    val spiParams = p(PeripherySPIFlashKey)
-    if (!spiParams.isEmpty) {
-      dut.qspi(0).sck := qspi_sck
-      dut.qspi(0).cs := qspi_cs
+  def connectSPIFlash(dut: HasPeripherySPIFlashModuleImp): Unit = {
+    val qspiParams = p(PeripherySPIFlashKey)
+    if (!qspiParams.isEmpty) {
+      val qspi_params = qspiParams(0)
+      val qspi_pins = Wire(new SPIPins(() => {new BasePin()}, qspi_params))
 
-      dut.qspi(0).dq := qspi_dq(0)
-      dut.qspi(0).dq := qspi_dq(1)
-      dut.qspi(0).dq := qspi_dq(2)
-      dut.qspi(0).dq := qspi_dq(3)
+      SPIPinsFromPort(qspi_pins,
+        dut.qspi(0),
+        dut.clock,
+        dut.reset,
+        syncStages = qspi_params.sampleDelay
+      )
+
+      IOBUF(qspi_sck, dut.qspi(0).sck)
+      IOBUF(qspi_cs,  dut.qspi(0).cs(0))
+
+      (qspi_dq zip qspi_pins.dq).foreach {
+        case(a, b) => IOBUF(a,b)
+      }
     }
-  }
 }
