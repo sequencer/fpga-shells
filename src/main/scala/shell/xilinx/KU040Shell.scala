@@ -2,26 +2,21 @@
 package sifive.fpgashells.shell.xilinx.ku040shell
 
 import Chisel._
-import chisel3.core.{Input, Output, attach}
-import chisel3.experimental.{RawModule, Analog, withClockAndReset}
-
+import chisel3.core.{Input, Output}
+import chisel3.experimental.{Analog, RawModule}
 import freechips.rocketchip.config._
 import freechips.rocketchip.devices.debug._
-import freechips.rocketchip.util.{SyncResetSynchronizerShiftReg}
-
-import sifive.blocks.devices.gpio._
-import sifive.blocks.devices.spi._
+import freechips.rocketchip.util.SyncResetSynchronizerShiftReg
+import sifive.blocks.devices.spi.{HasPeripherySPIFlashModuleImp, PeripherySPIFlashKey}
 import sifive.blocks.devices.uart._
-
 import sifive.fpgashells.devices.xilinx.xilinxku040mig._
-import sifive.fpgashells.ip.xilinx.{IBUFDS, PowerOnResetFPGAOnly, sdio_spi_bridge, ku040_sys_clock_mmcm0,
-                                    ku040_sys_clock_mmcm1, ku040reset}
+import sifive.fpgashells.ip.xilinx._
 
 //-------------------------------------------------------------------------
 // KU040Shell
 //-------------------------------------------------------------------------
 
-trait HasDDR3 { this: KU040Shell =>
+trait HasDDR4 { this: KU040Shell =>
 
   require(!p.lift(MemoryXilinxDDRKey).isEmpty)
   val ddr = IO(new XilinxKU040MIGPads(p(MemoryXilinxDDRKey)))
@@ -61,9 +56,9 @@ abstract class KU040Shell(implicit val p: Parameters) extends RawModule {
   //val uart_ctsn            = IO(Input(Bool()))
 
   // SDIO
-  val sdio_clk             = IO(Output(Bool()))
-  val sdio_cmd             = IO(Analog(1.W))
-  val sdio_dat             = IO(Analog(4.W))
+//  val sdio_clk             = IO(Output(Bool()))
+//  val sdio_cmd             = IO(Analog(1.W))
+//  val sdio_dat             = IO(Analog(4.W))
 
   // JTAG
   val jtag_TCK             = IO(Input(Clock()))
@@ -71,21 +66,10 @@ abstract class KU040Shell(implicit val p: Parameters) extends RawModule {
   val jtag_TDI             = IO(Input(Bool()))
   val jtag_TDO             = IO(Output(Bool()))
 
-  //Buttons
-  //val btn_0                = IO(Analog(1.W))
-  //val btn_1                = IO(Analog(1.W))
-  //val btn_2                = IO(Analog(1.W))
-  //val btn_3                = IO(Analog(1.W))
-
-  //Sliding switches
-  //val sw_0                 = IO(Analog(1.W))
-  //val sw_1                 = IO(Analog(1.W))
-  //val sw_2                 = IO(Analog(1.W))
-  //val sw_3                 = IO(Analog(1.W))
-  //val sw_4                 = IO(Analog(1.W))
-  //val sw_5                 = IO(Analog(1.W))
-  //val sw_6                 = IO(Analog(1.W))
-  //val sw_7                 = IO(Analog(1.W))
+  // QSPI
+  val qspi_cs              = IO(Analog(1.W))
+  val qspi_sck             = IO(Analog(1.W))
+  val qspi_dq              = IO(Vec(4, Analog(1.W)))
 
 
   //-----------------------------------------------------------------------
@@ -101,11 +85,6 @@ abstract class KU040Shell(implicit val p: Parameters) extends RawModule {
 
   val dut_ndreset     = Wire(Bool())
 
-  val sd_spi_sck      = Wire(Bool())
-  val sd_spi_cs       = Wire(Bool())
-  val sd_spi_dq_i     = Wire(Vec(4, Bool()))
-  val sd_spi_dq_o     = Wire(Vec(4, Bool()))
-
   val do_reset        = Wire(Bool())
 
   val mig_mmcm_locked = Wire(Bool())
@@ -114,14 +93,6 @@ abstract class KU040Shell(implicit val p: Parameters) extends RawModule {
   val mig_clock       = Wire(Clock())
   val mig_reset       = Wire(Bool())
   val mig_resetn      = Wire(Bool())
-
-  val pcie_dat_reset  = Wire(Bool())
-  val pcie_dat_resetn = Wire(Bool())
-  val pcie_cfg_reset  = Wire(Bool())
-  val pcie_cfg_resetn = Wire(Bool())
-  val pcie_dat_clock  = Wire(Clock())
-  val pcie_cfg_clock  = Wire(Clock())
-  val mmcm_lock_pcie  = Wire(Bool())
 
   //-----------------------------------------------------------------------
   // Differential clock
@@ -173,12 +144,10 @@ abstract class KU040Shell(implicit val p: Parameters) extends RawModule {
   // System reset
   //-----------------------------------------------------------------------
 
-  do_reset             := !mig_mmcm_locked || !mmcm_lock_pcie || mig_sys_reset || !ku040_sys_clock_mmcm0_locked ||
+  do_reset             := !mig_mmcm_locked || mig_sys_reset || !ku040_sys_clock_mmcm0_locked ||
                           !ku040_sys_clock_mmcm1_locked
   mig_resetn           := !mig_reset
   dut_resetn           := !dut_reset
-  pcie_dat_resetn      := !pcie_dat_reset
-  pcie_cfg_resetn      := !pcie_cfg_reset
 
 
   val safe_reset = Module(new ku040reset)
@@ -186,20 +155,13 @@ abstract class KU040Shell(implicit val p: Parameters) extends RawModule {
   safe_reset.io.areset := do_reset
   safe_reset.io.clock1 := mig_clock
   mig_reset            := safe_reset.io.reset1
-  safe_reset.io.clock2 := pcie_dat_clock
-  pcie_dat_reset       := safe_reset.io.reset2
-  safe_reset.io.clock3 := pcie_cfg_clock
-  pcie_cfg_reset       := safe_reset.io.reset3
   safe_reset.io.clock4 := dut_clock
   dut_reset            := safe_reset.io.reset4
 
   //overrided in connectMIG and connect PCIe
   //provide defaults to allow above reset sequencing logic to work without both
   mig_clock            := dut_clock
-  pcie_dat_clock       := dut_clock
-  pcie_cfg_clock       := dut_clock
   mig_mmcm_locked      := UInt("b1")
-  mmcm_lock_pcie       := UInt("b1")
 
   //---------------------------------------------------------------------
   // Debug JTAG
@@ -224,7 +186,6 @@ abstract class KU040Shell(implicit val p: Parameters) extends RawModule {
   // UART
   //-----------------------------------------------------------------------
 
-  //uart_rtsn := false.B
 
   def connectUART(dut: HasPeripheryUARTModuleImp): Unit = {
     val uartParams = p(PeripheryUARTKey)
@@ -235,40 +196,21 @@ abstract class KU040Shell(implicit val p: Parameters) extends RawModule {
     }
   }
 
+
   //-----------------------------------------------------------------------
   // SPI
   //-----------------------------------------------------------------------
 
-  def connectSPI(dut: HasPeripherySPIModuleImp): Unit = {
-    // SPI
-    sd_spi_sck := dut.spi(0).sck
-    sd_spi_cs  := dut.spi(0).cs(0)
+  def connectSPI(dut: HasPeripherySPIFlashModuleImp): Unit = {
+    val spiParams = p(PeripherySPIFlashKey)
+    if (!spiParams.isEmpty) {
+      dut.qspi(0).sck := qspi_sck
+      dut.qspi(0).cs := qspi_cs
 
-    dut.spi(0).dq.zipWithIndex.foreach {
-      case(pin, idx) =>
-        sd_spi_dq_o(idx) := pin.o
-        pin.i            := sd_spi_dq_i(idx)
+      dut.qspi(0).dq := qspi_dq(0)
+      dut.qspi(0).dq := qspi_dq(1)
+      dut.qspi(0).dq := qspi_dq(2)
+      dut.qspi(0).dq := qspi_dq(3)
     }
-
-    //-------------------------------------------------------------------
-    // SDIO <> SPI Bridge
-    //-------------------------------------------------------------------
-
-    val ip_sdio_spi = Module(new sdio_spi_bridge())
-
-    ip_sdio_spi.io.clk   := dut_clock
-    ip_sdio_spi.io.reset := dut_reset
-
-    // SDIO
-    attach(sdio_dat, ip_sdio_spi.io.sd_dat)
-    attach(sdio_cmd, ip_sdio_spi.io.sd_cmd)
-    sdio_clk := ip_sdio_spi.io.spi_sck
-
-    // SPI
-    ip_sdio_spi.io.spi_sck  := sd_spi_sck
-    ip_sdio_spi.io.spi_cs   := sd_spi_cs
-    sd_spi_dq_i             := ip_sdio_spi.io.spi_dq_i.toBools
-    ip_sdio_spi.io.spi_dq_o := sd_spi_dq_o.asUInt
   }
-
 }
